@@ -1,5 +1,15 @@
 # fastapi-microservice-template
 
+<p align="center">
+  <a href="LICENSE"><img alt="License: MIT" src="https://img.shields.io/badge/license-MIT-green.svg" /></a>
+  <a href="https://github.com/Ryotess/fastapi-microservice-template/actions/workflows/ci.yml?query=branch%3Amain"><img alt="CI" src="https://github.com/Ryotess/fastapi-microservice-template/actions/workflows/ci.yml/badge.svg?branch=main" /></a>
+  <img alt="Version" src="https://img.shields.io/badge/version-0.0.1-blue.svg" />
+  <img alt="Python" src="https://img.shields.io/badge/python-3.11%2B-3776AB.svg?logo=python&logoColor=white" />
+  <img alt="Ruff" src="https://img.shields.io/badge/lint-ruff-D7FF64.svg?logo=ruff&logoColor=111111" />
+  <img alt="uv" src="https://img.shields.io/badge/deps-uv-DE5FE9.svg" />
+  <img alt="FastAPI" src="https://img.shields.io/badge/framework-FastAPI-009688.svg?logo=fastapi&logoColor=white" />
+</p>
+
 A production-oriented, AI-coding-friendly FastAPI template for teams that want a clean microservice layout, consistent developer workflow, and minimal setup friction.
 
 This repository is designed to be cloned, re-initialized as a new Git repository, and then adapted into a real service. It includes:
