@@ -213,6 +213,10 @@ The workflow file is:
 
 The local commands and CI commands are intentionally aligned.
 
+## License
+
+This project is licensed under the MIT License. See [LICENSE](LICENSE).
+
 ## First Customization Checklist
 
 After cloning this template, update these areas before building real features:
