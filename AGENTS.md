@@ -72,6 +72,7 @@ This file gives coding agents a reliable, project-specific operating guide for t
   - Keep global settings in `src/config.py` via `pydantic-settings`.
   - Keep feature-specific settings in `src/<feature>/config.py`; do not leak feature settings into global config.
   - For local development, use a single root `.env` file; avoid per-feature `.env` files.
+  - When a settings class reads from the shared root `.env`, set `extra="ignore"` in its `model_config` so unrelated env keys for other features do not fail settings loading.
   - Use `ENV_FILE` only when an alternate env file path is explicitly required.
   - Prefer importing settings objects over reading env vars ad hoc in routers/services.
 - Database pattern:

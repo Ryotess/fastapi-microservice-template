@@ -16,6 +16,7 @@ class FeatureSettings(BaseSettings):
     model_config = ConfigDict(
         env_prefix="FEATURE_",
         env_file=str(env_file_path) if env_file_path.exists() else None,
+        extra="ignore",
     )
 
 

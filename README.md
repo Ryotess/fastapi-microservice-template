@@ -161,6 +161,7 @@ Rule of thumb:
 - Local development uses a single root `.env` file.
 - Global settings use the `GLOBAL_` prefix.
 - Feature settings should use feature-specific prefixes such as `USERS_` or `PAYMENTS_`.
+- Any `BaseSettings` class that reads the shared root `.env` should set `extra="ignore"` in `model_config` so unrelated keys from other features do not break settings initialization.
 - `GLOBAL_DATABASE_URL` is required for database-backed features.
 - Non-database routes can still run without `GLOBAL_DATABASE_URL`.
 
