@@ -1,0 +1,47 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+      - master
+  pull_request:
+
+jobs:
+  quality:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v6
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Initialize project metadata when missing
+        run: |
+          if [ ! -f pyproject.toml ]; then
+            uv init --no-readme
+          fi
+
+      - name: Install dependencies
+        run: |
+          if [ -f uv.lock ]; then
+            make install
+          else
+            make init
+          fi
+
+      - name: Check formatting
+        run: uv run ruff format --check .
+
+      - name: Lint
+        run: make lint
+
+      - name: Run tests
+        run: make test
