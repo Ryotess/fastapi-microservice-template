@@ -33,19 +33,101 @@ Use this template if you want:
 - `uv` as the only dependency manager
 - a predictable local setup and CI flow
 
-## Quick Start
+## Project Structure
 
-If you are creating a new project from this template, use this sequence:
+```text
+fastapi-microservice-template/
+├── .github/workflows/ci.yml  # GitHub Actions CI
+├── logs/
+│   └── app.log
+├── scripts/
+│   ├── bootstrap.sh
+│   └── new_feature.sh
+├── src/
+│   ├── main.py
+│   ├── config.py
+│   ├── database.py
+│   ├── exceptions.py
+│   ├── logging_config.py
+│   ├── models.py
+│   ├── pagination.py
+│   └── <feature_name>/
+│       ├── __init__.py
+│       ├── router.py
+│       ├── schemas.py
+│       ├── service.py
+│       └── ...
+├── templates/
+│   ├── feature_scaffold/
+│   │   ├── .env.example
+│   │   ├── __init__.py
+│   │   ├── config.py
+│   │   ├── constants.py
+│   │   ├── dependencies.py
+│   │   ├── exceptions.py
+│   │   ├── models.py
+│   │   ├── router.py
+│   │   ├── schemas.py
+│   │   ├── service.py
+│   │   └── utils.py
+│   └── index.html
+├── tests/
+│   └── test_main.py
+├── .dockerignore
+├── .env.example
+├── .gitignore
+├── AGENTS.md
+├── alembic.ini
+├── Dockerfile
+├── docker-compose.yml
+├── LICENSE
+├── logging.ini
+├── main.py
+├── Makefile
+├── pytest.ini
+└── README.md
+```
+
+## Project Setup
+
+### Quick Start (Recommended)
+
+1. Clone this template and enter the project directory.
 
 ```bash
-git clone <your_template_repo_url> <your_new_project_name>
+git clone https://github.com/Ryotess/fastapi-microservice-template.git temp-project
+mv temp-project <your_new_project_name>
+cd <your_new_project_name>
+```
+
+2. Ask your agent to initialize this cloned template as a new project (do not run the service yet).
+
+### Start a New Project from This Template
+
+#### 1. clone and create new repo
+```bash
+git clone https://github.com/Ryotess/fastapi-microservice-template.git temp-project
+mv temp-project <your_new_project_name>
 cd <your_new_project_name>
 rm -rf .git
+```
+
+#### 2. Initial New Project
+```bash
 git init
-uv python pin <python_version>
+uv python pin <python_version_of_your_project>
 uv init
 uv venv
+source .venv/bin/activate
+```
+
+#### 3. Initialize project dependencies
+```bash
 make init
+```
+
+#### 4. Create local environment file
+```bash
 cp .env.example .env
 ```
 
@@ -93,40 +175,6 @@ make test
 ```bash
 make up
 make down
-```
-
-## Project Structure
-
-```text
-fastapi-microservice-template/
-├── .github/workflows/ci.yml  # GitHub Actions CI
-├── .env.example              # Local environment template
-├── Dockerfile
-├── Makefile
-├── alembic.ini
-├── docker-compose.yml
-├── pytest.ini
-├── scripts/
-│   ├── bootstrap.sh
-│   └── new_feature.sh
-├── src/
-│   ├── main.py
-│   ├── config.py
-│   ├── database.py
-│   ├── exceptions.py
-│   ├── logging_config.py
-│   ├── models.py
-│   ├── pagination.py
-│   └── <feature_name>/
-│       ├── __init__.py
-│       ├── router.py
-│       ├── schemas.py
-│       ├── service.py
-│       └── ...
-├── templates/
-│   └── feature_scaffold/
-└── tests/
-    └── test_main.py
 ```
 
 ## Architecture Rules

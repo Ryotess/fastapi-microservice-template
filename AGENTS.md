@@ -174,6 +174,7 @@ Use this exact flow when initializing a newly cloned template project:
 ## CI/CD Defaults
 - If a CI runner is not explicitly specified by the user/request, use `k8s` as the default runner.
 - Keep lint/format/test checks in CI aligned with local commands (`make format`, `make lint`, `make test`).
+- This repository documents GitHub Actions in `README.md`; keep agent guidance consistent with that workflow file at `.github/workflows/ci.yml`.
 
 ## Coding Conventions for Agents
 - Keep imports and execution compatible with `PYTHONPATH=src`.
