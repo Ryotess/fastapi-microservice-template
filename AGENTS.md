@@ -20,7 +20,7 @@ This file gives coding agents a reliable, project-specific operating guide for t
 - `templates/feature_scaffold/`: source scaffold for new feature modules.
 - `scripts/new_feature.sh`: feature scaffold generator (used by `make new-feature`).
 - `tests/test_main.py`: baseline API smoke test.
-- `Makefile`: standard local commands.
+- `Makefile`: standard local commands, including the self-documenting `make help` target.
 - `scripts/bootstrap.sh`: one-shot initializer for turning this template into a real project.
 
 ## Development Architecture (Micro-Service Style)
@@ -151,6 +151,7 @@ Use this exact flow when initializing a newly cloned template project:
 - Do not use `pip install`, `requirements.txt` edits, `requirements/` folders, `poetry add`, `pipenv`, or `conda` workflows for dependency changes.
 
 ## Standard Commands
+- List available Make targets: `make help`
 - Initialize baseline deps (new project): `make init`
 - Create a feature scaffold: `make new-feature name=<feature_name>`
 - Install deps: `make install`

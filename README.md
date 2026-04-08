@@ -141,6 +141,14 @@ Then:
 
 ## Daily Developer Workflow
 
+### Discover Available Commands
+
+```bash
+make help
+```
+
+Use this to see the current Make targets and their descriptions.
+
 ### Start the App
 
 ```bash
@@ -223,6 +231,7 @@ cp .env.example .env
 
 This repository uses `uv` only.
 
+- See available local task shortcuts: `make help`
 - Initialize baseline dependencies: `make init`
 - Install from lockfile: `make install`
 - Add a runtime dependency: `uv add <package>`
