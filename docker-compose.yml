@@ -10,6 +10,7 @@ services:
       PYTHONPATH: /app/src
       ENV_FILE: /app/.env
       GLOBAL_DATABASE_URL: ${GLOBAL_DATABASE_URL:-postgresql://postgres:postgres@db:5432/app_db}
+      GLOBAL_LOG_FILE_ENABLED: ${GLOBAL_LOG_FILE_ENABLED:-false}
     volumes:
       - .:/app
       - app_venv:/app/.venv

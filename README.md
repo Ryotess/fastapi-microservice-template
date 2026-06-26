@@ -46,6 +46,7 @@ fastapi-microservice-template/
 ├── src/
 │   ├── main.py
 │   ├── config.py
+│   ├── settings_config.py
 │   ├── database.py
 │   ├── exceptions.py
 │   ├── logging_config.py
@@ -72,6 +73,8 @@ fastapi-microservice-template/
 │   │   └── utils.py
 │   └── index.html
 ├── tests/
+│   └── test_logging_config.py
+│   └── test_settings_config.py
 │   └── test_main.py
 ├── .dockerignore
 ├── .env.example
@@ -215,11 +218,21 @@ Rule of thumb:
 ## Environment and Configuration
 
 - Local development uses a single root `.env` file.
+- Settings env-file path resolution is centralized in `src/settings_config.py`; relative `ENV_FILE` overrides are resolved from the repository root.
 - Global settings use the `GLOBAL_` prefix.
 - Feature settings should use feature-specific prefixes such as `USERS_` or `PAYMENTS_`.
 - Any `BaseSettings` class that reads the shared root `.env` should set `extra="ignore"` in `model_config` so unrelated keys from other features do not break settings initialization.
 - `GLOBAL_DATABASE_URL` is required for database-backed features.
 - Non-database routes can still run without `GLOBAL_DATABASE_URL`.
+
+Logging defaults to stdout only. File logging is opt-in for local development or explicit operational needs:
+
+```env
+GLOBAL_LOG_FILE_ENABLED=true
+GLOBAL_LOG_FILE_PATH=logs/app.log
+```
+
+For containerized deployments, keep `GLOBAL_LOG_FILE_ENABLED=false` and let the platform collect stdout logs.
 
 Create your local environment file with:
 

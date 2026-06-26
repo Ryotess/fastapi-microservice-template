@@ -13,6 +13,7 @@ This file gives coding agents a reliable, project-specific operating guide for t
 ## Repository Layout (Important Paths)
 - `src/main.py`: FastAPI app, lifespan hooks, CORS, root + health endpoints.
 - `src/config.py`: global settings via `pydantic-settings` (`GlobalSettings`).
+- `src/settings_config.py`: shared settings env-file path resolution and `SettingsConfigDict` builder.
 - `src/database.py`: async SQLAlchemy DB factory/session dependency (`app.state` lifecycle pattern).
 - `src/logging_config.py`: Loguru setup + shutdown hook.
 - `alembic.ini`: Alembic migration configuration (root-level).
@@ -35,6 +36,7 @@ This file gives coding agents a reliable, project-specific operating guide for t
 ### Global Layer (`src/`)
 - `src/main.py`: app creation, middleware, lifespan, and router registration.
 - `src/config.py`: shared settings object(s), especially `GlobalSettings` with `GLOBAL_` env prefix.
+- `src/settings_config.py`: shared settings env-file path resolution and `SettingsConfigDict` builder.
 - `src/database.py`: shared async DB factory/base and `get_session` dependency.
 - `src/models.py`: shared model mixins/base entities used across features.
 - `src/exceptions.py`: shared exception types for cross-feature usage.
@@ -70,10 +72,11 @@ This file gives coding agents a reliable, project-specific operating guide for t
 ## Implementation Patterns (Required)
 - Config pattern:
   - Keep global settings in `src/config.py` via `pydantic-settings`.
+  - Keep shared settings env-file path resolution in `src/settings_config.py`; do not duplicate path resolution in each settings class.
   - Keep feature-specific settings in `src/<feature>/config.py`; do not leak feature settings into global config.
   - For local development, use a single root `.env` file; avoid per-feature `.env` files.
   - When a settings class reads from the shared root `.env`, set `extra="ignore"` in its `model_config` so unrelated env keys for other features do not fail settings loading.
-  - Use `ENV_FILE` only when an alternate env file path is explicitly required.
+  - Use `ENV_FILE` only when an alternate env file path is explicitly required; relative `ENV_FILE` paths are resolved from the repository root.
   - Prefer importing settings objects over reading env vars ad hoc in routers/services.
 - Database pattern:
   - Keep engine/sessionmaker factory logic centralized in `src/database.py`.
@@ -211,7 +214,7 @@ Use this exact flow when initializing a newly cloned template project:
 ## Environment & Config
 - For local development, use one root `.env` file at the repository root (copy from `.env.example`).
 - Settings are loaded from process environment variables; when present, the default env file path is the root `.env`.
-- `ENV_FILE` can override the env file path when a custom location is required.
+- `ENV_FILE` can override the env file path when a custom location is required; relative paths are resolved from the repository root.
 - Global settings use the `GLOBAL_` prefix (see `src/config.py`).
 - Feature settings must use feature-specific prefixes (for example `USERS_`, `PAYMENTS_`) and read from the same shared environment source.
 - `GLOBAL_DATABASE_URL` is required for DB-backed features.
@@ -232,7 +235,8 @@ Use this exact flow when initializing a newly cloned template project:
 ## Logging
 - Required: use **Loguru** for logging in this repository.
 - Logging is configured in `src/logging_config.py`.
-- Runtime logs are written to `logs/app.log` and stdout.
+- Keep file logging disabled for containerized/service deployments unless persistent local files are explicitly required by the runtime environment.
+- Runtime logs are written to stdout by default; file logging is opt-in via `GLOBAL_LOG_FILE_ENABLED=true`.
 - Keep sink/format/rotation changes centralized in `src/logging_config.py`.
 - Do not introduce `logging.basicConfig`, alternate logging frameworks, or `logging.ini`-based runtime config unless explicitly requested.
 - Preserve the shutdown behavior (`shutdown_logging`) when adjusting app lifespan.
