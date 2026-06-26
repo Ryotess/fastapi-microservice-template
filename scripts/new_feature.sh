@@ -32,14 +32,22 @@ if [[ -e "$target_dir" ]]; then
   exit 1
 fi
 
-mkdir -p "$target_dir"
+test_dir="$repo_root/tests/$feature_name"
+if [[ -e "$test_dir" ]]; then
+  echo "Test target already exists: $test_dir"
+  exit 1
+fi
+
+mkdir -p "$target_dir" "$test_dir"
 cp -R "$scaffold_dir"/. "$target_dir"/
+touch "$test_dir/.gitkeep"
 
 feature_prefix="$(printf '%s' "$feature_name" | tr '[:lower:]' '[:upper:]')_"
 
 echo "Created feature scaffold: src/$feature_name"
+echo "Created feature test scaffold: tests/$feature_name"
 echo "Next steps:"
 echo "  1) Implement schemas, service logic, and routes in src/$feature_name/"
 echo "  2) Register the feature router in src/main.py"
-echo "  3) Add tests in tests/"
+echo "  3) Add tests in tests/$feature_name/"
 echo "  4) Add feature env vars to root .env using a feature prefix (e.g. $feature_prefix)"

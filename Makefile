@@ -4,8 +4,8 @@ help: ## Show available make targets
 	@awk 'BEGIN {FS = ":.*## "}; /^[a-zA-Z0-9_.-]+:.*## / {printf "%-14s %s\n", $$1, $$2}' $(MAKEFILE_LIST)
 
 init: ## Install baseline runtime and development dependencies
-	uv add fastapi uvicorn sqlalchemy pydantic-settings loguru alembic psycopg
-	uv add --dev ruff pytest pytest-asyncio httpx
+	uv add "fastapi>=0.115,<0.116" uvicorn sqlalchemy pydantic-settings loguru alembic psycopg
+	uv add --dev ruff pytest pytest-asyncio "httpx>=0.27,<0.28"
 
 new-feature: ## Scaffold a new feature module with name=<feature_name>
 	@if [ -z "$(name)" ]; then echo "Usage: make new-feature name=<feature_name>"; exit 1; fi

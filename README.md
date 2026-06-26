@@ -73,8 +73,9 @@ fastapi-microservice-template/
 │   │   └── utils.py
 │   └── index.html
 ├── tests/
-│   └── test_logging_config.py
-│   └── test_settings_config.py
+│   ├── test_logging_config.py
+│   ├── test_new_feature_script.py
+│   ├── test_settings_config.py
 │   └── test_main.py
 ├── .dockerignore
 ├── .env.example
@@ -166,12 +167,30 @@ The API is served at `http://localhost:8000`.
 make new-feature name=users
 ```
 
+This creates both:
+
+- `src/users/` for feature-owned application code
+- `tests/users/` for feature-owned tests
+
 Each feature should own its API contract and business logic:
 
 - `router.py` for endpoints
 - `schemas.py` for request and response models
 - `service.py` or `service/` for business logic
 - optional `models.py`, `dependencies.py`, `config.py`, `exceptions.py`, and `utils.py`
+
+### Test Layout
+
+This template starts with only global smoke/infrastructure tests, so those tests stay directly under `tests/`.
+
+When a real feature is added, feature-owned tests should mirror code ownership:
+
+- Feature tests live in `tests/<feature_name>/`.
+- Global app/template tests that are not owned by one feature can stay directly under `tests/`.
+
+Avoid adding feature tests directly under the `tests/` root. Keep file names as `test_*.py` so pytest discovery stays consistent.
+
+Pytest uses `--import-mode=importlib`, so different feature folders can reuse clear file names such as `test_router.py` or `test_service.py` without import-name collisions.
 
 ### Run Quality Checks
 
@@ -306,7 +325,7 @@ After cloning this template, update these areas before building real features:
 2. Update `.env` values.
 3. Rename app metadata in `src/main.py` if your service should not expose the template name.
 4. Create your first feature module.
-5. Add project-specific models, routers, and tests.
+5. Add project-specific models, routers, and feature-owned tests under `tests/<feature_name>/`.
 
 ## Author
 
