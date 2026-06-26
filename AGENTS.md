@@ -20,7 +20,9 @@ This file gives coding agents a reliable, project-specific operating guide for t
 - `pytest.ini`: pytest runtime configuration (root-level).
 - `templates/feature_scaffold/`: source scaffold for new feature modules.
 - `scripts/new_feature.sh`: feature scaffold generator (used by `make new-feature`).
-- `tests/test_main.py`: baseline API smoke test.
+- `tests/test_main.py`: baseline app/root endpoint smoke test.
+- `tests/test_logging_config.py`, `tests/test_settings_config.py`, and `tests/test_new_feature_script.py`: baseline global infrastructure/tooling tests.
+- `tests/<feature_name>/` (when features are added): feature-owned tests for routes, schemas, services, and feature dependencies.
 - `Makefile`: standard local commands, including the self-documenting `make help` target.
 - `scripts/bootstrap.sh`: one-shot initializer for turning this template into a real project.
 
@@ -54,6 +56,11 @@ This file gives coding agents a reliable, project-specific operating guide for t
 - `constants.py`: feature constants.
 - `utils.py`: small feature-local utility functions.
 
+### Test Layer (`tests/`)
+- Current template-level global tests live directly under `tests/`.
+- `tests/<feature_name>/`: tests owned by a specific feature. Mirror the feature boundary rather than grouping all routers, services, or schemas together globally.
+- Keep feature-owned tests out of the `tests/` root; root-level tests should be reserved for app-wide/template-wide behavior that is not owned by one feature.
+
 ## Feature Folder Contract
 - Minimum required files for each feature:
   - `__init__.py`
@@ -68,6 +75,8 @@ This file gives coding agents a reliable, project-specific operating guide for t
   - `constants.py`
   - `utils.py`
   - `.env.example` (documentation-only when feature-specific variables are needed; runtime still uses shared environment sources)
+- Required test location for each feature:
+  - `tests/<feature_name>/` with `test_*.py` files for feature routes, schemas, services, dependencies, and error behavior.
 
 ## Implementation Patterns (Required)
 - Config pattern:
@@ -103,6 +112,9 @@ This file gives coding agents a reliable, project-specific operating guide for t
   - If the feature becomes complex, replace/split into `service/` as a package.
   - In `service/`, add `__init__.py` and re-export the public service API for clean imports.
   - Routers and external callers should import from `src.<feature>.service` (package root), not deep service submodules.
+- Test organization pattern:
+  - Put feature-owned tests under `tests/<feature_name>/`, matching the feature folder under `src/<feature_name>/`.
+  - Keep root-level `tests/test_*.py` files only for app-wide/template-wide behavior that is not owned by one feature.
 
 ## Feature Development Checklist
 1. Create a new feature scaffold with `make new-feature name=<feature_name>`.
@@ -112,7 +124,7 @@ This file gives coding agents a reliable, project-specific operating guide for t
 5. Implement business logic in `src/<feature>/service.py` (or `src/<feature>/service/` with `__init__.py` for complex features).
 6. Add endpoints in `src/<feature>/router.py` and wire dependencies from `dependencies.py`.
 7. Register router in `src/main.py`.
-8. Add/adjust tests in `tests/` for happy path and error path behavior.
+8. Add/adjust tests in `tests/<feature_name>/` for happy path and error path behavior.
 
 ## Project Initialization (Agents)
 Use this exact flow when initializing a newly cloned template project:
@@ -132,6 +144,7 @@ Use this exact flow when initializing a newly cloned template project:
   - update the root `.env` values for the target service
   - rename user-facing app metadata in `src/main.py` if the new service should not keep the template name
   - create the first feature with `make new-feature name=<feature_name>`
+  - add feature tests under `tests/<feature_name>/`
 
 ## Dependency Management Policy (Required)
 - Use `uv` as the only dependency/environment manager for this repository.
@@ -195,9 +208,12 @@ Use this exact flow when initializing a newly cloned template project:
 
 ## Testing Guidance
 - Test runner: `pytest` (run via `make test`).
-- Put tests under `tests/` using `test_*.py`.
+- Put feature tests under `tests/<feature_name>/` using `test_*.py`.
+- Keep global app/template tests directly under `tests/`.
+- Avoid placing feature-owned tests directly under the `tests/` root.
 - `pytest.ini` is the source of truth for test discovery/runtime behavior. Respect these settings:
   - `pythonpath = src`
+  - `addopts = --import-mode=importlib`
   - `testpaths = tests`
   - naming: `test_*.py`, `Test*`, `test_*`
   - `asyncio_mode = auto`
