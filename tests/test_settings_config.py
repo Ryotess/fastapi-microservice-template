@@ -1,3 +1,7 @@
+from typing import get_type_hints
+
+from pydantic_settings import SettingsConfigDict
+
 from settings_config import build_settings_config, resolve_env_file_path
 
 
@@ -34,3 +38,7 @@ def test_build_settings_config_uses_shared_env_file(tmp_path):
     assert config["env_prefix"] == "FEATURE_"
     assert config["env_file"] == str(env_file)
     assert config["extra"] == "ignore"
+
+
+def test_build_settings_config_is_typed_for_base_settings():
+    assert get_type_hints(build_settings_config)["return"] is SettingsConfigDict
